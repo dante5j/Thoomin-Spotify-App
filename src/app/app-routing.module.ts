@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'home/dashboard', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const appRoutes: Routes = [
       { path: 'dashboard', component: DashboardComponent }
     ]
   },
+  { path: 'login', component: LoginComponent }
   // { path: '**', redirectTo: 'home' }
 ];
 
