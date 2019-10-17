@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TestService {
-  url = 'https://us-central1-thoomin-spotify-app.cloudfunctions.net';
+  url = 'https://thoomin-spotify-app.firebaseapp.com';
   constructor(private http: HttpClient) {}
 
   getHelloWorld() {

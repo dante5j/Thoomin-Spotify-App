@@ -7,12 +7,12 @@ import { TestService } from 'src/app/services/test.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  test = '' as any;
+  test: any;
   constructor(private testService: TestService) {}
 
   ngOnInit() {
-    this.testService.getHelloWorld().subscribe(t => {
-      this.test = t;
+    this.testService.getHelloWorld().subscribe((t: any) => {
+      this.test = t.message;
     });
   }
 }
