@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-#hosting
-hosting.*
+#firebase
+.firebase
+firebase-debug.log
 
 #settings
 .vscode
