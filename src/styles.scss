@@ -1,8 +1,37 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~font-awesome/css/font-awesome.css';
-@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+html,
 body {
   height: 100%;
   background-color: #f1f3fb;
-  font-family: 'Montserrat';
+  font-family: 'Helvetica';
+}
+
+.bg-concert {
+  /* The image used */
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('./assets/Concert.jpg');
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.memo {
+  width: 100%;
+  position: absolute;
+  top: 30%;
+  left: 0;
+}
+
+.btn-spotify {
+  background-color: #2fd565;
 }
