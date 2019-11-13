@@ -13,6 +13,7 @@ import { FooterComponent } from './home/footer/footer.component';
 import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { LandingComponent } from './landing/landing.component';
+import { SidenavComponent } from './home/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { LandingComponent } from './landing/landing.component';
     HeaderComponent,
     FooterComponent,
     LoginComponent,
-    LandingComponent
+    LandingComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,

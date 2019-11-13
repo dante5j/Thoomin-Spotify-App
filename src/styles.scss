@@ -25,13 +25,19 @@ body {
   background-color: black;
 }
 
-.memo {
-  width: 100%;
-  position: absolute;
-  top: 30%;
-  left: 0;
-}
-
 .btn-spotify {
   background-color: #2fd565;
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.text-thoomin {
+  color: white;
+  font-weight: bold;
+  font-style: italic;
 }
