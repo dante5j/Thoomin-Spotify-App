@@ -8,8 +8,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
-import { HeaderComponent } from './home/header/header.component';
-import { FooterComponent } from './home/footer/footer.component';
 import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { LandingComponent } from './landing/landing.component';
@@ -20,8 +18,6 @@ import { SidenavComponent } from './home/sidenav/sidenav.component';
     AppComponent,
     HomeComponent,
     DashboardComponent,
-    HeaderComponent,
-    FooterComponent,
     LoginComponent,
     LandingComponent,
     SidenavComponent
