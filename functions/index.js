@@ -39,6 +39,7 @@ app.get('/api/user/callback', (req, res) => {
   const code = req.query.code || null;
 
   // Check for state
+
   const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     form: {
@@ -65,20 +66,15 @@ app.get('/api/user/callback', (req, res) => {
 
       // use the access token to access the Spotify Web API
       request.get(options, (error, response, body) => {
-        console.log(body);
+        if (!error && response.statusCode === 200) {
+          res.status(200).json(body);
+        } else {
+          res.status(400).json({error: "can't find spotify user"});
+        }
       });
 
-      // we can also pass the token to the browser to make requests from there
-      res.redirect('/#' +
-        querystring.stringify({
-          access_token: access_token,
-          refresh_token: refresh_token
-        }));
     } else {
-      response.redirect('/#' +
-          querystring.stringify({
-            error: 'invalid_token'
-          }));
+      res.status(400).json({error: "invalid_token", another: error, response_code: response});
     }
   });
 });
