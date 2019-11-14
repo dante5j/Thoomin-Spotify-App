@@ -9,19 +9,23 @@ export class SidenavComponent implements OnInit {
   menuItems = [
     {
       name: 'Dashboard',
-      route: '/dashboard'
+      route: 'dashboard'
+    },
+    {
+      name: 'Now Playing',
+      route: 'now-playing'
     },
     {
       name: 'Your Playlists',
-      route: ''
+      route: 'playlists'
     },
     {
       name: 'Queue',
-      route: ''
+      route: 'queue'
     },
     {
       name: 'Settings',
-      route: ''
+      route: 'settings'
     }
   ];
 

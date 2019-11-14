@@ -12,6 +12,10 @@ import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { LandingComponent } from './landing/landing.component';
 import { SidenavComponent } from './home/sidenav/sidenav.component';
+import { NowPlayingComponent } from './home/now-playing/now-playing.component';
+import { PlaylistsComponent } from './home/playlists/playlists.component';
+import { QueueComponent } from './home/queue/queue.component';
+import { SettingsComponent } from './home/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,11 @@ import { SidenavComponent } from './home/sidenav/sidenav.component';
     DashboardComponent,
     LoginComponent,
     LandingComponent,
-    SidenavComponent
+    SidenavComponent,
+    NowPlayingComponent,
+    PlaylistsComponent,
+    QueueComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
