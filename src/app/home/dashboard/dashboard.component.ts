@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TestService } from 'src/app/services/test.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,10 +8,10 @@ import { TestService } from 'src/app/services/test.service';
 })
 export class DashboardComponent implements OnInit {
   test: any;
-  constructor(private testService: TestService) {}
+  constructor(private spotifyService: SpotifyService) {}
 
   ngOnInit() {
-    this.testService.getHelloWorld().subscribe((t: any) => {
+    this.spotifyService.getHelloWorld().subscribe((t: any) => {
       this.test = t.message;
     });
   }

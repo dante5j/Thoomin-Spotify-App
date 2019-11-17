@@ -1,1 +1,13 @@
 <h1 class="text-thoomin">Now Playing</h1>
+<div *ngIf="nowPlaying" class="absolute-center">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-thoomin text-center mb-3">
+        {{ nowPlaying?.songName }} - {{ nowPlaying?.artistName }}
+      </h1>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+      <img [src]="nowPlaying?.imageURL" height="400" />
+    </div>
+  </div>
+</div>
