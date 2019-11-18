@@ -1,13 +1,31 @@
 <h1 class="text-thoomin">Now Playing</h1>
-<div *ngIf="nowPlaying" class="absolute-center">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="text-thoomin text-center mb-3">
-        {{ nowPlaying?.songName }} - {{ nowPlaying?.artistName }}
-      </h1>
-    </div>
-    <div class="col-12 d-flex justify-content-center">
-      <img [src]="nowPlaying?.imageURL" height="400" />
-    </div>
+<div
+  *ngIf="nowPlaying"
+  class="row flex-row flex-nowrap pt-3 justify-content-center overflow-hidden"
+>
+  <div class="col-3 d-flex align-items-center">
+    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+  </div>
+  <div class="col-3 d-flex align-items-center">
+    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+  </div>
+  <div class="col-4 d-flex align-items-center">
+    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+  </div>
+  <div class="col-3 d-flex align-items-center">
+    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+  </div>
+  <div class="col-3 d-flex align-items-center">
+    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h5 class="text-thoomin text-center mt-3">
+      {{ nowPlaying?.songName }}
+    </h5>
+    <h5 class="text-thoomin text-muted text-center">
+      {{ nowPlaying?.artistName }}
+    </h5>
   </div>
 </div>

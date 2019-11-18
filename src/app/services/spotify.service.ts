@@ -14,7 +14,7 @@ export class SpotifyService {
 
   getTrack() {
     return this.http.post(`${this.url}/api/spotify/track`, {
-      trackId: '2gZUPNdnz5Y45eiGxpHGSc'
+      trackId: '5nayhWICkQGMTkisxVMbRw'
     });
   }
 }
