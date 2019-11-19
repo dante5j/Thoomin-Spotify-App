@@ -4,27 +4,62 @@ const express = require('express');
 const querystring = require('querystring');
 const cors = require('cors');
 const request = require('request');
-// const cors = require('cors')({origin: true});
+const spotify = require('./spotify');
 
-const API_KEY = "AIzaSyAGeKbRZW_WHgDrbIYclh-sVaCEn9RPQTc";
+require('dotenv').config();
+
+const env = process.env;
 
 firebase.initializeApp({
-	apiKey: API_KEY,
-	databaseURL: "https://thoomin-spotify-app.firebaseio.com"
+	apiKey: env.WEB_API_KEY,
+	databaseURL: env.DATABASE_URL
 });
 
 const app = express();
-const stateKey = 'spotify_auth_state';
-const CLIENT_ID = "39b0423f2b094cf5b4609737348f2a52";
-const CLIENT_SECRET = "f0e251b203ee4cc4bd32449be22d48fe";
-const REDIRECT_URI = "https://thoominspotify.com/api/user/callback";
+
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
+const VERSION = "0.0.3";
 
 app.use(cors());
+
+app.get('/api/spotify/auth', (req, res) => {
+  spotify.getAccessToken()
+  .then(accessToken => {
+    res.status(200).json({accessToken: accessToken});
+    return accessToken;
+  })
+  .catch(error => {
+    res.status(400).json({error: error.message});
+  });
+});
+
+app.post('/api/spotify/track', (req, res) => {
+  const trackId = req.body.trackId;
+
+  if (!trackId) {
+    res.status(400).json({error: "Missing trackId."});
+  } else {
+    spotify.getTrackById(trackId)
+    .then(trackInfo => {
+      res.status(200).json(trackInfo);
+      return trackInfo;
+    })
+    .catch(error => {
+      res.status(400).json({error: error.message});
+    })
+  }
+});
+
+// Returns current version of the API.
+app.get('/api/version', (req, res) => {
+  res.status(200).json({version: VERSION});
+});
 
 // Create user.
 app.get('/api/user/login', (req, res) => {
   // TODO: State cookie integration to prevent spam.
-
   var scope = 'user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -67,7 +102,7 @@ app.get('/api/user/callback', (req, res) => {
       // use the access token to access the Spotify Web API
       request.get(options, (error, response, body) => {
         if (!error && response.statusCode === 200) {
-          res.status(200).json(body);
+          res.redirect("https://thoominspotify.com/home/");
         } else {
           res.status(400).json({error: "can't find spotify user"});
         }
@@ -78,65 +113,6 @@ app.get('/api/user/callback', (req, res) => {
     }
   });
 });
-
-/*
-app.post('/api/user/verifyemail', (req, res) => {
-  const userEmail = req.body.userEmail;
-  const userPassword = req.body.userPassword;
-
-  if (!userEmail) {
-    res.status(400).json({"message": "Email required for creating user."});
-  } else if (!userPassword) {
-    res.status(400).json({"message": "Password required for creating user."});
-  } else {
-    authService.signInWithEmailAndPassword(userEmail, userPassword)
-    .then(user => {
-      const firebaseUser = authService.currentUser;
-      
-      firebaseUser.sendEmailVerification().then(function() {
-        res.status(200).json({message: "Successfully send email verification to " + userEmail + "."});
-        
-        return null;
-      }).catch(error => {
-        res.status(400).json({message: "Failed to send email verification."});
-      });
-
-      return null;
-    })
-    .catch(error => {
-      const errorMessage = error.message;
-      const errorCode = error.code;
-      res.status(400).json({message: errorMessage, code: errorCode});
-    });
-  }
-});
-
-// Sign in user
-app.post('/api/user/login', (req, res) => {
-  const userEmail = req.body.userEmail;
-  const userPassword = req.body.userPassword;
-
-  if (!userEmail) {
-    res.status(400).json({"message": "Email required for creating user."});
-  } else if (!userPassword) {
-    res.status(400).json({"message": "Password required for creating user."});
-  } else {
-    authService.signInWithEmailAndPassword(userEmail, userPassword)
-    .then(user => {
-      const firebaseUser = authService.currentUser;
-
-      res.status(200).json({message: "Successfully signed in", user: user, firebaseUser: firebaseUser});
-      return null;
-    })
-    .catch(error => {
-      const errorMessage = error.message;
-      const errorCode = error.code;
-      res.status(400).json({message: errorMessage, code: errorCode});
-    });
-  }
-});
-
-*/
 
 app.get('/api/helloworld', (req, res) => {
     return res.status(200).json({"message":"EXPRESS WORKS!!!"});
