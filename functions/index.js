@@ -20,7 +20,7 @@ const app = express();
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
-const VERSION = "0.0.3";
+const VERSION = "0.0.5";
 
 app.use(cors());
 
@@ -70,48 +70,31 @@ app.get('/api/user/login', (req, res) => {
     }));
 });
 
+function createFirebaseToken(spotifyURI) {
+	return firebase.auth().createCustomToken(spotifyURI);
+}
+
 app.get('/api/user/callback', (req, res) => {
   const code = req.query.code || null;
 
-  // Check for state
+  // TODO: Check for state
+  spotify.loginCallbackUser(code)
+  .then((userInfo) => {
+	// Add it to the database
+	const accessToken = userInfo.accessToken;
+	const spotifyURI = userInfo.spotifyURI;
+	const displayName = userInfo.displayName;
+	const profilePic = userInfo.profilePic;
 
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: REDIRECT_URI,
-      grant_type: 'authorization_code'
-    },
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
-    },
-    json: true
-  };
+	const firebaseToken = createFirebaseToken(spotifyURI);
 
-  request.post(authOptions, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      const access_token = body.access_token;
-      const refresh_token = body.refresh_token;
-
-      const options = {
-        url: 'https://api.spotify.com/v1/me',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-
-      // use the access token to access the Spotify Web API
-      request.get(options, (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          res.redirect("https://thoominspotify.com/home/");
-        } else {
-          res.status(400).json({error: "can't find spotify user"});
-        }
-      });
-
-    } else {
-      res.status(400).json({error: "invalid_token", another: error, response_code: response});
-    }
-  });
+	// Redirect them to thoomin.
+	res.redirect("https://thoominspotify.com/home/");
+	return userInfo;
+  })
+  .catch(error => {
+	res.status(400).json(error.message);
+  })
 });
 
 app.get('/api/helloworld', (req, res) => {
