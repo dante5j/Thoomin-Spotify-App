@@ -52,8 +52,15 @@ function loginCallbackUser(code) {
 			if (error || response.statusCode !== 200) {
 				reject(new Error("Unable to authenticate using Spotify."));
 			} else {
-				const userAccessToken = body.access_token;
-				// const userRefreshToken = body.refresh_token;
+				resolve({accessToken : body.access_token});
+			}
+		});
+	});
+}
+
+/*
+
+// const userRefreshToken = body.refresh_token;
 		
 				const options = {
 					url: 'https://api.spotify.com/v1/me',
@@ -70,18 +77,10 @@ function loginCallbackUser(code) {
 					} else if (body.product !== 'premium') {
 						reject(new Error("Account not premium"));
 					} else {
-						resolve({
-							accessToken : body.access_token,
-							spotifyURI : body.uri,
-							profilePic : body.images[0],
-							displayName : body.display_name
-						});
+						resolve(body);
 					}
 				});
-			}
-		});
-	});
-}
+*/
 
 function getTrackInfo(accessToken, trackId) {
 	const options = {
@@ -121,7 +120,7 @@ function getAccessToken() {
 		} else {
 			counter = 0;
 
-			var authOptions = {
+			const authOptions = {
 				url: 'https://accounts.spotify.com/api/token',
 				headers: {
 					'Authorization': 'Basic ' + Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString("base64")

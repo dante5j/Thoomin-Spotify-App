@@ -5,6 +5,7 @@ const querystring = require('querystring');
 const cors = require('cors');
 const request = require('request');
 const spotify = require('./spotify');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -23,6 +24,7 @@ const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
 const VERSION = "0.0.5";
 
 app.use(cors());
+app.use(cookieParser());
 
 app.get('/api/spotify/auth', (req, res) => {
   spotify.getAccessToken()
@@ -77,28 +79,28 @@ function createFirebaseToken(spotifyURI) {
 app.get('/api/user/callback', (req, res) => {
   const code = req.query.code || null;
 
-  // TODO: Check for state
   spotify.loginCallbackUser(code)
-  .then((userInfo) => {
-	// Add it to the database
-	const accessToken = userInfo.accessToken;
-	const spotifyURI = userInfo.spotifyURI;
-	const displayName = userInfo.displayName;
-	const profilePic = userInfo.profilePic;
+  .then((body) => {
 
-	const firebaseToken = createFirebaseToken(spotifyURI);
-
-	// Redirect them to thoomin.
-	res.redirect("https://thoominspotify.com/home/");
-	return userInfo;
+    res.cookie("accessToken", body.accessToken);
+    res.redirect("https://thoominspotify.com/home/");
+	  return body;
   })
   .catch(error => {
-	res.status(400).json(error.message);
+	  res.status(400).json(error.message);
   })
+
+  
+});
+
+app.post('/api/user/accessToken', (req, res) => {
+  const code = req.body.code || null;
+
+  // TODO: Check for state
 });
 
 app.get('/api/helloworld', (req, res) => {
-    return res.status(200).json({"message":"EXPRESS WORKS!!!"});
+  res.status(200).json({"message":"EXPRESS WORKS!!!"});
 });
 
 exports.app = functions.https.onRequest(app);
