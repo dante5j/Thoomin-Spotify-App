@@ -16,6 +16,12 @@ function countDown() {
 	counter++;
 }
 
+/**
+ * 
+ * @param {string} trackId - A track's Spotify id
+ * 
+ * @return {Promise<Object>}
+ */
 function getTrackById(trackId) {
 	// use the access token to access the Spotify Web API
 	return new Promise((resolve, reject) => {
@@ -33,7 +39,13 @@ function getTrackById(trackId) {
 	});
 }
 
-function loginCallbackUser(code) {
+/**
+ * 
+ * @param {string} code
+ * 
+ * @returns {Promise<string>} accessToken
+ */
+function getAccessTokenFromCode(code) {
 	const authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
@@ -52,35 +64,29 @@ function loginCallbackUser(code) {
 			if (error || response.statusCode !== 200) {
 				reject(new Error("Unable to authenticate using Spotify."));
 			} else {
-				resolve({accessToken : body.access_token});
+				resolve(body.access_token);
 			}
 		});
 	});
 }
 
-/*
+function getSpotifyUserInfo(userAccessToken) {
+	const options = {
+		url: 'https://api.spotify.com/v1/me',
+		headers: { 'Authorization': 'Bearer ' + userAccessToken },
+		json: true
+	};
 
-// const userRefreshToken = body.refresh_token;
-		
-				const options = {
-					url: 'https://api.spotify.com/v1/me',
-					headers: { 'Authorization': 'Bearer ' + userAccessToken },
-					json: true
-				};
-		
-				// use the access token to access the Spotify Web API
-				request.get(options, (error, response, body) => {
-					if (error || response.statusCode !== 200) {
-						reject(new Error("Could not find account."));
-					} else if (body.type !== 'user') {
-						reject(new Error("Incorrect account type."));
-					} else if (body.product !== 'premium') {
-						reject(new Error("Account not premium"));
-					} else {
-						resolve(body);
-					}
-				});
-*/
+	return new Promise((resolve, reject) => {
+		request.get(options, (error, response, body) => {
+			if (error || response.statusCode !== 200) {
+				reject(new Error("Could not find account."));
+			} else {
+				resolve(body);
+			}
+		});
+	});
+}
 
 function getTrackInfo(accessToken, trackId) {
 	const options = {
@@ -150,7 +156,10 @@ module.exports = {
 	getAccessToken: function() {
 		return getAccessToken();
 	},
-	loginCallbackUser: function(code) {
-		return loginCallbackUser(code);
+	getAccessTokenFromCode: function(code) {
+		return getAccessTokenFromCode(code);
+	},
+	getSpotifyUserInfo: function(userAccessToken) {
+		return getSpotifyUserInfo(userAccessToken);
 	}
 }
