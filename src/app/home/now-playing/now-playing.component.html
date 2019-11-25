@@ -1,31 +1,75 @@
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
 <h1 class="text-thoomin">Now Playing</h1>
 <div
-  *ngIf="nowPlaying"
+  *ngIf="currTrack"
   class="row flex-row flex-nowrap pt-3 justify-content-center overflow-hidden"
 >
   <div class="col-3 d-flex align-items-center">
-    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+    <img
+      *ngIf="prevTracks[1]"
+      [src]="prevTracks[0].album.images[0].url"
+      class="img-fluid"
+    />
   </div>
   <div class="col-3 d-flex align-items-center">
-    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+    <img
+      *ngIf="prevTracks[1]"
+      [src]="prevTracks[1].album.images[0].url"
+      class="img-fluid"
+    />
+    <img
+      *ngIf="!prevTracks[1] && prevTracks[0]"
+      [src]="prevTracks[0].album.images[0].url"
+      class="img-fluid"
+    />
   </div>
   <div class="col-4 d-flex align-items-center">
-    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+    <img [src]="currTrack.album.images[0].url" class="img-fluid" />
   </div>
   <div class="col-3 d-flex align-items-center">
-    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+    <img
+      *ngIf="nextTracks[0]"
+      [src]="nextTracks[0].album.images[0].url"
+      class="img-fluid"
+    />
   </div>
   <div class="col-3 d-flex align-items-center">
-    <img [src]="nowPlaying?.imageURL" class="img-fluid" />
+    <img
+      *ngIf="nextTracks[1]"
+      [src]="nextTracks[1].album.images[0].url"
+      class="img-fluid"
+    />
   </div>
 </div>
-<div class="row">
-  <div class="col-12">
-    <h5 class="text-thoomin text-center mt-3">
-      {{ nowPlaying?.songName }}
+<div *ngIf="currTrack" class="row">
+  <div class="mt-3 col-12 d-flex justify-content-center">
+    <h5 class="d-inline text-thoomin text-center">{{ currTrack.name }}&nbsp;-&nbsp;</h5>
+    <h5
+      *ngFor="let artist of currTrack.artists"
+      class="d-inline text-thoomin text-muted text-center"
+    >
+      {{ artist.name }},&nbsp;
     </h5>
-    <h5 class="text-thoomin text-muted text-center">
-      {{ nowPlaying?.artistName }}
-    </h5>
+  </div>
+  <div class="mt-3 col-12 d-flex justify-content-center">
+    <input
+      type="range"
+      min="0"
+      [max]="state?.duration"
+      [value]="state?.position"
+      [ngModel]="state?.position"
+      (ngModelChange)="seek($event)"
+    />
+  </div>
+  <div class="mt-4 col-12 d-flex justify-content-center">
+    <button (click)="prev()" class="mx-1 btn btn-outline-primary">
+      <i class="fa fa-fast-backward"></i>
+    </button>
+    <button (click)="playpause()" class="mx-1 btn btn-outline-primary">
+      <i class="fa fa-play"></i> / <i class="fa fa-pause"></i>
+    </button>
+    <button (click)="next()" class="mx-1 btn btn-outline-primary">
+      <i class="fa fa-fast-forward"></i>
+    </button>
   </div>
 </div>
