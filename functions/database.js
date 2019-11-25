@@ -1,22 +1,49 @@
-const firebase = require("firebase");
+const admin = require('firebase-admin');
 
 require('dotenv').config();
 
 const serviceAccount = require(process.env.SERVICE_ACCOUNT_URL);
 
-firebase.initializeApp({
-	serviceAccount: serviceAccount
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+	databaseURL: "https://thoomin-spotify-app.firebaseio.com"
 });
 
-function createFirebaseToken(spotifyURI) {
-	return firebase.auth().createFirebaseToken(spotifyURI);
+function createFirebaseToken(spotifyUID) {
+	return new Promise ((resolve, reject) => {
+		admin.auth().createCustomToken(spotifyUID).then(customToken => {
+			resolve(customToken);
+			return customToken;
+		})
+		.catch(error => {
+			reject(new Error("Unable to create firebase token."));
+		});
+	});
 }
 
-function getFirebaseToken(userInfo) {
-	const accessToken = userInfo.accessToken;
-	const spotifyURI = userInfo.spotifyURI;
-	const displayName = userInfo.displayName;
-	const profilePic = userInfo.profilePic;
+/**
+ * 
+ */
+function createParty(idToken) {
+	return new Promise((resolve, reject) => {
+		admin.auth().verifyIdToken(idToken)
+		.then(decodedToken => {
 
-	const firebaseToken = createFirebaseToken(spotifyURI);
+			
+			return decodedToken;
+		})
+		.catch(error => {
+
+		});
+	});
+}
+
+function getRandomPartyId() {
+	
+}
+
+module.exports = {
+	createFirebaseToken: function(spotifyURI) {
+		return createFirebaseToken(spotifyURI);
+	}
 }

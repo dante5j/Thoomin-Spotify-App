@@ -1,9 +1,11 @@
 const spotify = require("./spotify");
+const database = require("./database");
+const firebase = require("firebase");
 
-spotify.loginCallbackUser("AQAudNTH2JhPGCaxmhKdEOhi9fZ17y_wfdBjhy8f266nS1CFA8MzM4pYlRRla1BNgyEJKEj-_4WRLGX4xQuFgO_tayLF1vmigNGcPHvx3rD0Zur9C1NIheKCYRxZj1iGDTgL5QeTCJOFwfEAoQAVj0NZKoavmjD4_-mhw2lXkzdMbMiybDXfTC97yQ9LQUMI9HrWam_5pPWZGRzNs_1_hAX8R6cqUYtNRwmdgZXIfTqHw2ej2Tvh_RauoazLZTtivUARwgES")
-.then(body => {
-	console.log(body);
-	return;
+spotify.getSpotifyUserInfo("BQAFmLExjrMp6P_Jb6oYkhIoSFKvXEDsPnnMKwf-0tEQatK200ThOnekN9a5DPGj-mCHJGpagcgd5nJEcn7JmCijx9WFnij3cMdT_UFjdGcJ-roHC3mGT-PuhiHaszFrDjAivRZD-uaaga0OFxACJR6JrT-3l-6FPQ")
+.then(thing => {
+	console.log(thing);
+	return thing;
 }).catch(error => {
-	console.log(error.message);
+	console.log(error);
 })
