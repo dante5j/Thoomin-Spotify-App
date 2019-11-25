@@ -11,4 +11,10 @@ export class LoginService {
   login() {
     return this.http.get(`${this.url}/api/user/login`);
   }
+
+  getAccessToken(idToken: string) {
+    return this.http.post(`${this.url}/api/user/accessToken`, {
+      idToken
+    });
+  }
 }

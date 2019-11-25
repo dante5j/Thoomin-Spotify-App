@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -37,7 +38,7 @@ import { SettingsComponent } from './home/settings/settings.component';
     NgbModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

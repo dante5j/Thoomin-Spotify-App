@@ -6,8 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SpotifyService {
   url = 'https://thoomin-spotify-app.firebaseapp.com';
-  // tslint:disable-next-line: max-line-length
-  accessToken = 'BQD6U0vEO6-lVCJptPvPvZzJGWcmpQ4qZTttonyL6s1-EKoouYG0lmM0mhuVhAcrq7CaTknuesevQPANiiVram51-G5j7ljaR6ikjSe6_l4QpoF4uyjDHYP8587RRHLQL6SKJi3hnRk2vZkTHdEeesFFbiuyV38309O8jHwyVQ';
+
   constructor(private http: HttpClient) {}
 
   getTrack() {
@@ -17,13 +16,41 @@ export class SpotifyService {
   }
 
   playSong() {
+    const accessToken = localStorage.getItem('accessToken');
+    const device_id = localStorage.getItem('_spharmony_device_id');
     return this.http.put(
-      'https://api.spotify.com/v1/me/player/play?device_id=251ba7a418d1159758a358b3ec73b5338b5c7f2b',
+      `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
       { uris: ['spotify:track:1W24W6jQegnNh0x5DfBBPT'] },
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.accessToken}`
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+  }
+
+  getPlaylists(uid: string) {
+    const accessToken = localStorage.getItem('accessToken');
+    return this.http.get(
+      `https://api.spotify.com/v1/users/${uid}/playlists`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+  }
+
+  getUser() {
+    const accessToken = localStorage.getItem('accessToken');
+    return this.http.get(
+      `https://api.spotify.com/v1/me`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
         }
       }
     );

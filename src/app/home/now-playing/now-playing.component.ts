@@ -25,7 +25,7 @@ export class NowPlayingComponent implements OnInit {
   ngOnInit() {
     if ((window as any).Spotify) {
       // tslint:disable-next-line: max-line-length
-      const token = 'BQD6U0vEO6-lVCJptPvPvZzJGWcmpQ4qZTttonyL6s1-EKoouYG0lmM0mhuVhAcrq7CaTknuesevQPANiiVram51-G5j7ljaR6ikjSe6_l4QpoF4uyjDHYP8587RRHLQL6SKJi3hnRk2vZkTHdEeesFFbiuyV38309O8jHwyVQ';
+      const token = localStorage.getItem('accessToken');
       this.player = new (window as any).Spotify.Player({
         name: 'THOOMIN',
         getOAuthToken: cb => {
