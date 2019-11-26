@@ -120,4 +120,14 @@ export class SpotifyService {
       }
     });
   }
+
+  search(query: string) {
+    const accessToken = localStorage.getItem('accessToken');
+    return this.http.get(`https://api.spotify.com/v1/search?q=${query}&type=track`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  }
 }
