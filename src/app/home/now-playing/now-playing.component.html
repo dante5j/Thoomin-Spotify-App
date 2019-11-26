@@ -55,9 +55,9 @@
     <input
       type="range"
       min="0"
-      [max]="state?.duration"
-      [value]="state?.position"
-      [ngModel]="state?.position"
+      [max]="playbackState?.duration"
+      [value]="playbackState?.position"
+      [ngModel]="playbackState?.position"
       (ngModelChange)="seek($event)"
     />
   </div>
