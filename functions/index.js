@@ -17,108 +17,184 @@ firebase.initializeApp({
 
 const app = express();
 
+const basePath = '/api';
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
-const VERSION = "0.0.5";
+const VERSION = "0.0.6";
+const stateKey = '__session';
 
 app.use(cors());
 app.use(cookieParser());
 
-/**
- * 
- */
-app.get('/api/spotify/auth', (req, res) => {
+
+function generateRandomString(length) {
+	let output = '';
+	let possibleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	for(let i = 0; i < length; i++) {
+		output += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+	}
+
+	return output;
+}
+
+app.get(basePath + '/url', (req, res) => {
+	const fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
+	res.send(fullUrl);
+});
+
+app.get(basePath + '/version', (req, res) => {
+	res.status(200).json({version: VERSION});
+});
+
+app.get(basePath + '/spotify/auth', (req, res) => {
   spotify.getAccessToken()
   .then(accessToken => {
-    res.status(200).json({accessToken: accessToken});
-    return accessToken;
+	res.status(200).json({accessToken: accessToken});
+	return accessToken;
   })
   .catch(error => {
-    res.status(400).json({error: error.message});
+	res.status(400).json({error: error.message});
   });
 });
 
-/**
- * 
- */
-app.post('/api/spotify/track', (req, res) => {
+app.post(basePath + '/spotify/tracks', (req, res) => {
+	const trackIds = req.body.trackIds;
+
+	if (!trackIds) {
+		res.status(400).json({error: "Missing trackIds."});
+	} else {
+		spotify.getTracksByIds(trackIds)
+		.then(tracks => {
+			res.status(200).json(tracks);
+			return tracks;
+		})
+		.catch(error => {
+			res.status(400).json({error: error});
+		}) 
+	}
+});
+
+app.post(basePath + '/spotify/track', (req, res) => {
   const trackId = req.body.trackId;
 
   if (!trackId) {
-    res.status(400).json({error: "Missing trackId."});
+	res.status(400).json({error: "Missing trackId."});
   } else {
-    spotify.getTrackById(trackId)
-    .then(trackInfo => {
-      res.status(200).json(trackInfo);
-      return trackInfo;
-    })
-    .catch(error => {
-      res.status(400).json({error: error.message});
-    })
+	spotify.getTrackByIdOld(trackId)
+	.then(trackInfo => {
+	  res.status(200).json(trackInfo);
+	  return trackInfo;
+	})
+	.catch(error => {
+	  res.status(400).json({error: error.message});
+	})
   }
 });
 
-/**
- * 
- */
-app.get('/api/version', (req, res) => {
-  res.status(200).json({version: VERSION});
+app.get(basePath + '/user/login', (req, res) => {
+	const state = generateRandomString(16);
+	res.cookie(stateKey, state);
+
+	// const redirectURI = req.protocol + '://' + req.get('host') + req.baseUrl + '/api/user/callback';
+	const redirectURI = 'https://thoominspotify.com/api/user/callback';
+	console.log("REDIRECT URI " + redirectURI);
+	spotify.setRedirectURI(redirectURI);
+
+	const scope = 'user-read-private user-read-email streaming playlist-modify-public playlist-modify-private';
+	res.redirect('https://accounts.spotify.com/authorize?' +
+		querystring.stringify({
+		response_type: 'code',
+		client_id: CLIENT_ID,
+		scope: scope,
+		redirect_uri: redirectURI,
+		state: state
+	}));
 });
 
-/**
- * 
- */
-app.get('/api/user/login', (req, res) => {
-  // TODO: State cookie integration to prevent spam.
-  const scope = 'user-read-private user-read-email';
+app.get(basePath + '/user/callback', (req, res) => {
+	const code = req.query.code;
+	const state = req.query.state;
+	const storedState = req.cookies ? req.cookies[stateKey] : null;
 
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: CLIENT_ID,
-      scope: scope,
-      redirect_uri: REDIRECT_URI,
-    }));
+	if (state === null || state !== storedState) {
+		// const url = req.protocol + '://' + req.get('host') + '/?';
+		const url = 'https://thoominspotify.com/?';
+		
+		res.redirect(url + 
+			querystring.stringify({
+				error: 'state_mismatch'
+			})
+		);
+	} else {
+		let refreshToken = null;
+		let accessToken = null;
+
+		spotify.getTokensFromCode(code)
+		.then((tokens) => {
+			refreshToken = tokens.refreshToken;
+			accessToken = tokens.accessToken;
+			console.log("refresh token " + refreshToken);
+			console.log("access token " + accessToken);
+			
+			return spotify.getSpotifyUser(accessToken);
+		})
+		.then(spotifyUser => {
+			console.log("SpotifyUser: ", spotifyUser);
+			return database.loginThoominUser(spotifyUser, refreshToken);
+		})
+		.then(thoominToken => {
+			const url = process.env.SITE_URL + '/home';
+
+			res.cookie('thoominToken', thoominToken);
+			res.redirect(url);
+			return thoominToken;
+		})
+		.catch(error => {
+			res.status(400).json({error : error.message});
+		});
+	}
 });
 
-/**
- * 
- */
-app.get('/api/user/callback', (req, res) => {
-  const code = req.query.code || null;
+app.post(basePath + '/user/party/create', (req, res) => {
+	const idToken = req.body.idToken;
+	const partyName = req.body.partyName || null;
 
-  spotify.getAccessTokenFromCode(code)
-  .then((accessToken) => {
-    res.cookie("spotifyAccessToken", accessToken);
-	  return spotify.getSpotifyUserInfo(accessToken);
-  })
-  .then(spotifyUserInfo => {
-    return database.createFirebaseToken(spotifyUserInfo.uri);
-  })
-  .then(thoominAccessToken => {
-    console.log("Thoomin Access Token " + thoominAccessToken);
-    res.cookie("thoominAccessToken", thoominAccessToken).redirect("https://thoominspotify.com/home");
-    return thoominAccessToken;
-  })
-  .catch(error => {
-	  res.status(400).json({error : error.message});
-  });
+	if (!idToken) {
+		res.status(400).json({error: "idToken required to retrieve accessToken."});
+	} else {
+		database.createParty(idToken, partyName)
+		.then(party => {
+			res.status(200).json(party);
+			return party;
+		})
+		.catch(error => {
+			console.log(error);
+			res.status(400).json({error: error.message});
+		})
+	}
 });
 
-/**
- * 
- */
-app.post('/api/user/accessToken', (req, res) => {
-  const code = req.body.code || null;
+app.post(basePath + '/user/accessToken', (req, res) => {
+	const idToken = req.body.idToken;
 
-  // TODO: Check for state
+	if (!idToken) {
+		res.status(400).json({error: "idToken required to retrieve accessToken."});
+	} else {
+		database.getRefreshToken(idToken)
+		.then(refreshToken => {
+			return spotify.getAccessTokenFromRefreshToken(refreshToken);
+		})
+		.then(accessToken => {
+			res.status(200).json({accessToken : accessToken});
+			return accessToken;
+		})
+		.catch(error => {
+			console.log(error);
+			res.status(400).json({error: error.message});
+		})
+	}
 });
 
-/**
- * 
- */
-app.get('/api/helloworld', (req, res) => {
-  res.status(200).json({"message":"EXPRESS WORKS!!!"});
-});
 
 exports.app = functions.https.onRequest(app);

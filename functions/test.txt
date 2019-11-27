@@ -1,0 +1,8 @@
+PATCH https://thoominspotify.com/api/party/add
+
+{
+	groupCode: "XJMLA",
+	userId: "",
+	trackId: "jfl;sajflsdjfl;kjlk;dsf"
+}
+

@@ -1,0 +1,23 @@
+1. Create party
+	- Create random party code
+	- Check for duplicate codes
+	- Set up database w/ party
+	- Send party code back to front-end
+
+
+2. Add tracks to party
+
+3. Join party
+	- Check code exists
+	- Check guest/user
+	- Send back randomly generated access code
+
+4. Get current playing song
+	- 
+
+5. 
+
+a. GET multiple tracks by id
+b. Documents stuff in swaggerhub
+c. Get tests running
+d. Share link code (web only)
