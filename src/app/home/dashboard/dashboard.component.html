@@ -16,6 +16,14 @@
     placeholder="Search..."
   />
 </div>
-<h5 class="text-thoomin" *ngFor="let track of tracks">
-  {{ track.name }}
-</h5>
+<div *ngFor="let track of tracks" class="row mb-2">
+  <div class="col-auto pr-0">
+    <img
+      [src]="track.album.images[2].url"
+      class="img-fluid"
+    />
+  </div>
+  <h5 class="col my-auto text-thoomin">
+    {{ track.name }}
+  </h5>
+</div>
