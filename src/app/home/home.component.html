@@ -1,19 +1,23 @@
-
-  <div class="navbar fixed-top">
-  <h2 class="text-thoomin text-uppercase thoomin m-0">
+<div class="navbar fixed-top" style="height: 4rem;">
+  <h2 class="text-thoomin text-uppercase m-0">
     Thoomin
   </h2>
   <button class="btn btn-primary ml-auto" [routerLink]="'/login'">
     Log out
-  </button>  
+  </button>
 </div>
 
 <div class="row h-100">
-    <div class="col-2 h-100" style="background-color: #1A1A1A;">
-      <app-sidenav></app-sidenav>
-    </div>
-    <div class="col-10 h-100" style="background-color: #1F1F1F; overflow-y: scroll;">
-      <router-outlet></router-outlet>
-    </div>
-</div> 
-
+  <div
+    class="col-2 h-100"
+    style="background-color: #1A1A1A; overflow-y: scroll;"
+  >
+    <app-sidenav></app-sidenav>
+  </div>
+  <div
+    class="col-10 h-100"
+    style="background-color: #1F1F1F; overflow-y: scroll;"
+  >
+    <router-outlet></router-outlet>
+  </div>
+</div>
