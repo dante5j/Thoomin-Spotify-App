@@ -5,3 +5,17 @@
 .row{
     padding-top: 4rem;
 }
+
+.btn-thoomin {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-left: auto;
+    color: white;
+    &:hover {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: grey;
+    }
+  }

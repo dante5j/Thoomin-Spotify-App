@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
     databaseURL: 'https://thoomin-spotify-app.firebaseio.com'
   };
   thoominToken: string;
+  isSidenavOpen = true;
   constructor(
     private cookieService: CookieService,
     private loginService: LoginService,
@@ -61,5 +62,9 @@ export class HomeComponent implements OnInit {
       .catch(error => {
         console.error(error);
       });
+  }
+
+  toggleSidenav() {
+    this.isSidenavOpen = !this.isSidenavOpen;
   }
 }

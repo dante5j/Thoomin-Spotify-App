@@ -1,17 +1,17 @@
-@import '~bootstrap/dist/css/bootstrap.css';
-@import '~font-awesome/css/font-awesome.css';
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
 html,
 body {
   height: 100%;
   overflow: hidden;
   background-color: #f1f3fb;
-  font-family: 'Helvetica';
+  font-family: "Helvetica";
 }
 
 .bg-concert {
   /* The image used */
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('./assets/Concert.jpg');
+    url("./assets/Concert.jpg");
 
   /* Full height */
   height: 100%;
@@ -41,4 +41,18 @@ body {
   color: white;
   font-weight: bold;
   font-style: italic;
+}
+
+.btn-thoomin {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  margin-left: auto;
+  color: white;
+  &:hover {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: grey;
+  }
 }

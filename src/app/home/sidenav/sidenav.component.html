@@ -1,26 +1,24 @@
 <section id="main menu">
-    <div *ngFor="let item of menuItems">
-        <button
-          [routerLink]="item.route"
-          routerLinkActive="text-primary"
-          class="btn btn-block text-left"
-        >
-          {{ item.name }}
-        </button>
-      </div>
-</section>
-  
-<section id="your playlists">
-  <div id="playlist">
-    <h5 class="my-2">Your Playlists</h5>
+  <div *ngFor="let item of menuItems">
+    <button
+      [routerLink]="item.route"
+      routerLinkActive="text-primary"
+      class="btn btn-thoomin btn-block text-left"
+    >
+      {{ item.name }}
+    </button>
   </div>
+</section>
+
+<section id="your playlists">
+  <h5 class="my-2">Your Playlists</h5>
   <div *ngFor="let playlist of playlistItems">
-      <button
-        [routerLink]="['playlist', playlist.id]"
-        routerLinkActive="text-primary"
-        class="btn btn-block text-left"
-      >
-        {{ playlist.name }}
-      </button>
-    </div>
+    <button
+      [routerLink]="['playlist', playlist.id]"
+      routerLinkActive="text-primary"
+      class="btn btn-thoomin btn-block text-left"
+    >
+      {{ playlist.name }}
+    </button>
+  </div>
 </section>

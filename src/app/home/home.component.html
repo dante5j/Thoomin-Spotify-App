@@ -9,15 +9,27 @@
 
 <div class="row h-100">
   <div
+    *ngIf="isSidenavOpen"
     class="col-2 h-100"
     style="background-color: #1A1A1A; overflow-y: scroll;"
   >
+    <button (click)="toggleSidenav()" class="btn btn-thoomin px-0">
+      <i class="fa fa-arrow-left"></i>
+    </button>
     <app-sidenav></app-sidenav>
   </div>
+
   <div
-    class="col-10 h-100"
-    style="background-color: #1F1F1F; overflow-y: scroll;"
+    *ngIf="!isSidenavOpen"
+    class="col-auto p-0 h-100"
+    style="background-color: #1A1A1A; overflow-y: scroll;"
   >
+    <button (click)="toggleSidenav()" class="btn btn-thoomin">
+      <i class="fa fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <div class="col h-100" style="background-color: #1F1F1F; overflow-y: scroll;">
     <router-outlet></router-outlet>
   </div>
 </div>
