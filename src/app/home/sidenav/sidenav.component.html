@@ -8,4 +8,13 @@
       {{ item.name }}
     </button>
   </div>
+  <div *ngFor="let playlist of playlistItems" class="col-12 mb-2">
+    <button
+      [routerLink]="['playlist', playlist.id]"
+      routerLinkActive="text-primary"
+      class="btn btn-dark btn-block text-left"
+    >
+      {{ playlist.name }}
+    </button>
+  </div>
 </div>

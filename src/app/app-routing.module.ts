@@ -20,9 +20,9 @@ const appRoutes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'now-playing', component: NowPlayingComponent },
-      { path: 'playlists', component: PlaylistsComponent },
       { path: 'queue', component: QueueComponent },
-      { path: 'settings', component: SettingsComponent }
+      { path: 'settings', component: SettingsComponent },
+      { path: 'playlist/:id', component: PlaylistsComponent }
     ]
   }
 ];

@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     const thoominToken = this.cookieService.get('thoominToken');
     const customToken = thoominToken
       ? thoominToken
-      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NDc1MzMzOCwiZXhwIjoxNTc0NzU2OTM4LCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.Nvx9sQ-7swIdjG26dtnrWdbD3QiI5apIXLG55H68ClS9ue3P1MWgi6-nxoCbgbNIms6BduyfFmtO09F2y8NLHbV_dCFZcgfItAJSr9VVe-Aa3uanIEIpH_GLxt4Vy8_beXgH1pESqv753i0-Alv7CBTDVGCadnRZTp5yfLncVjf8XG8gneB2Xj9EUtTd03DP5NttTX3ay57_GhPEbL6mDn5eGd3fofro8Iid72LG9175Rgx_3Hq2UONGv7fgXYvy163nTR84p-gdyTwpkh-IivZ1EdXC2ZGAQSMJ03ubmnF3d1bAZx_BH44J9Lcjfp47SkR8w3eRZ5B5GerFWUviWQ';
+      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NDg5NTIyNiwiZXhwIjoxNTc0ODk4ODI2LCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.VDYsovIbFMFXQAFmAR3epRot6RQLq_IIlSdr4NhOB8GmYT7q5YZbaRwqr0mkprU_xPRvuVMGEmuPFa2ImmlkgECQIVn2t0OODWLBz8PcCtbChXesRLuNT2pPfq07N44FIM2NLotFmHWJNpGkUElTpOR23PJYhqBGcahBhpMy1znOwN9AN9uqY1X2hxNS2BDux8C7cHB90LNa5bHFFVE6pRcDf2SX3c17QZEDEZIT80rg4-zHC5ZzH5o0dBF7Bevok73h74JzyfmRkIP59uhybH8XXJCqxtxIJ_x4XbFuKCM1e95FQVZmtEjUKyT7rLucOvmZE7Ea99ziQasu5gG7eQ';
     this.thoominToken = this.cookieService.get('thoominToken');
     firebase.initializeApp(this.firebaseConfig);
     firebase
@@ -61,11 +61,5 @@ export class HomeComponent implements OnInit {
       .catch(error => {
         console.error(error);
       });
-  }
-
-  playSong() {
-    this.spotifyService.playSong().subscribe(() => {
-      console.log('Now Playing');
-    });
   }
 }

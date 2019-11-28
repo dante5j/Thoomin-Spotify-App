@@ -130,4 +130,14 @@ export class SpotifyService {
       }
     });
   }
+
+  getPlaylist(id: string) {
+    const accessToken = localStorage.getItem('accessToken');
+    return this.http.get(`https://api.spotify.com/v1/playlists/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  }
 }
