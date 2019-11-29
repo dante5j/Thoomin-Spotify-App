@@ -1,5 +1,12 @@
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
 <h1 class="text-thoomin">Now Playing</h1>
+
+<div class="bgimg h-100"
+[ngStyle]="{ 'background-image': 'url(' + currTrack.album.images[0].url + ')'}"
+>
+</div>
+
 <div
   *ngIf="currTrack"
   class="row flex-row flex-nowrap pt-3 justify-content-center overflow-hidden"
