@@ -10,7 +10,7 @@ export class SettingsComponent implements OnInit {
   constructor(private spotifyService: SpotifyService) {}
 
   ngOnInit() {
-    this.playSong();
+    // this.playSong();
   }
 
   playSong() {
