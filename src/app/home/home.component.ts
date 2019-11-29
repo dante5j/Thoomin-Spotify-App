@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   thoominToken: string;
   isSidenavOpen = true;
   user: any;
+  enableCreateParty = false;
   constructor(
     private cookieService: CookieService,
     private loginService: LoginService,
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit {
       .auth()
       .currentUser.getIdToken(true)
       .then(idToken => {
+        localStorage.setItem('idToken', idToken);
         this.loginService.getAccessToken(idToken).subscribe((res: any) => {
           localStorage.setItem('accessToken', res.accessToken);
           if (!this.spotifyService.playerConnected) {
@@ -61,15 +63,19 @@ export class HomeComponent implements OnInit {
                 this.spotifyService.connectPlayer();
               });
           }
-          this.loginService.createParty(idToken, 'test').subscribe((party: any) => {
-            console.log('party code', party);
-            localStorage.setItem('partyCode', party.partyCode);
-          });
+          this.enableCreateParty = true;
         });
       })
       .catch(error => {
         console.error(error);
       });
+  }
+
+  createParty() {
+    this.loginService.createParty(localStorage.getItem('idToken'), 'test').subscribe((party: any) => {
+      console.log('party code', party);
+      localStorage.setItem('partyCode', party.partyCode);
+    });
   }
 
   toggleSidenav() {
