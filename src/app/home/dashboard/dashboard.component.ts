@@ -20,4 +20,10 @@ export class DashboardComponent implements OnInit {
       console.log(this.tracks);
     });
   }
+
+  addSong(track: Track) {
+    this.spotifyService.addTrack(track.id, localStorage.getItem('partyCode')).subscribe((res) => {
+      console.log('track added', res);
+    });
+  }
 }

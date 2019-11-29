@@ -33,4 +33,10 @@ export class PlaylistsComponent implements OnInit {
       });
     });
   }
+
+  addSong(track: Track) {
+    this.spotifyService.addTrack(track.id, localStorage.getItem('partyCode')).subscribe((res) => {
+      console.log('track added', res);
+    });
+  }
 }

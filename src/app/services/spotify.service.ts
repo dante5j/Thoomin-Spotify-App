@@ -22,6 +22,13 @@ export class SpotifyService {
     });
   }
 
+  addTrack(trackId: string, partyCode: string) {
+    return this.http.post(`${this.url}/api/party/add`, {
+      trackId,
+      partyCode
+    });
+  }
+
   connectPlayer() {
     if ((window as any).Spotify) {
       this.playerConnected = true;

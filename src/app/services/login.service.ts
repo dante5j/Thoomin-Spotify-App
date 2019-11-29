@@ -17,4 +17,11 @@ export class LoginService {
       idToken
     });
   }
+
+  createParty(idToken: string, partyName: string) {
+    return this.http.post(`${this.url}/api/user/party/create`, {
+      idToken,
+      partyName
+    });
+  }
 }
