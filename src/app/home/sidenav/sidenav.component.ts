@@ -30,12 +30,8 @@ export class SidenavComponent implements OnInit {
   constructor(private spotifyService: SpotifyService) {}
 
   ngOnInit() {
-    this.spotifyService.getUser().subscribe((user: any) => {
-      console.log('user', user);
-      this.spotifyService.getPlaylists(user.id).subscribe((playlists: any) => {
-        console.log('playlists', playlists);
-        this.playlistItems = playlists.items;
-      });
+    this.spotifyService.$playlists.subscribe((playlists) => {
+      this.playlistItems = playlists;
     });
   }
 }

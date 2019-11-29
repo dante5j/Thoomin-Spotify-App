@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   };
   thoominToken: string;
   isSidenavOpen = true;
+  user: any;
   constructor(
     private cookieService: CookieService,
     private loginService: LoginService,
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
     const thoominToken = this.cookieService.get('thoominToken');
     const customToken = thoominToken
       ? thoominToken
-      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NDk3NjI1MywiZXhwIjoxNTc0OTc5ODUzLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.rl--VIf0HCRN5vgR4uPzuXTX1zRxGYvwVjozgJqJ0pzurZCdyN84wmBpL9gEf3utReoV5Dam5S35sxJZMgf6akCFnwJL3FQr4AE12d9l0DGkVwfwBVuqchpL0xoC2A27xMIyW8sDgWWSjqQTZ6V9NlslN8TPUD0caiHxyfVtJHcQ9CF3cGhf81ZextPcKFO2FInn4wlu8JdMD8WbTekULUqRBRnql3zZeg91v6D9dGwa45nlLu88vsrL9lC25tMSBePdyJNytnQ1VdG6vBL0JUSHAXdsxWdnRQMJrnmYE4FmvkfFJlqB9vXtYPzUb6LWSZzwkRgub1MSJGBge42AlQ';
+      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NTAwNDM2NCwiZXhwIjoxNTc1MDA3OTY0LCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.RcmMyVfuRtPH3JtENAESeF9bxrxhiKmcSuGjtu0RcuTtg2IdeDrG41Yx5uopBzraqKVxT1tQijIZTB98LsoaJ2qi9LeNH_AM5xMOQy5LUiGLiCYcdnnoyZ5ZfVZhqlXb-fXNPpjKrPnfW1NK5xubQZfj616aRXhM6TZb809yY5Xec8BtQ1O2lHisL69Z_Q2VR67_mpXKP6UeQ-d7ezQQJ3asO4aV05qEoVOWhS8rUXCRTh8BLWJh5RV8EGRegylpHbKjptMprF-1CHQN5wfcOnkQwu9-0AEummDd-fBauoMg2e73aso0BI9JdCTUHI_E5dvSB4QTgAmP-1_faCuQrQ';
     this.thoominToken = this.cookieService.get('thoominToken');
     firebase.initializeApp(this.firebaseConfig);
     firebase
@@ -41,6 +42,9 @@ export class HomeComponent implements OnInit {
       .catch(error => {
         console.error('Error', error);
       });
+    this.spotifyService.$user.subscribe((user) => {
+      this.user = user;
+    });
   }
 
   getAccessToken() {

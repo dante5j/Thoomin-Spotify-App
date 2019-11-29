@@ -11,6 +11,8 @@ export class SpotifyService {
   player: SpotifyPlayer;
   playbackState: PlaybackState;
   $playbackState: Subject<PlaybackState> = new Subject<PlaybackState>();
+  $user: Subject<any> = new Subject<any>();
+  $playlists: Subject<any[]> = new Subject<any[]>();
   playerConnected = false;
   constructor(private http: HttpClient) {}
 
@@ -52,6 +54,7 @@ export class SpotifyService {
       // Ready
       this.player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
+        this.getUserAndPlaylists();
       });
       // Not Ready
       this.player.addListener('not_ready', ({ device_id }) => {
@@ -60,6 +63,17 @@ export class SpotifyService {
       // Connect to the player!
       this.player.connect();
     }
+  }
+
+  getUserAndPlaylists() {
+    this.getUser().subscribe((user: any) => {
+      console.log('user', user);
+      this.$user.next(user);
+      this.getPlaylists(user.id).subscribe((playlists: any) => {
+        console.log('playlists', playlists);
+        this.$playlists.next(playlists.items);
+      });
+    });
   }
 
   playpause() {
@@ -123,12 +137,15 @@ export class SpotifyService {
 
   search(query: string) {
     const accessToken = localStorage.getItem('accessToken');
-    return this.http.get(`https://api.spotify.com/v1/search?q=${query}&type=track`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
+    return this.http.get(
+      `https://api.spotify.com/v1/search?q=${query}&type=track`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
       }
-    });
+    );
   }
 
   getPlaylist(id: string) {
