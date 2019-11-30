@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-settings',
@@ -7,15 +6,8 @@ import { SpotifyService } from 'src/app/services/spotify.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  constructor(private spotifyService: SpotifyService) {}
+  constructor() {}
 
   ngOnInit() {
-    // this.playSong();
-  }
-
-  playSong() {
-    this.spotifyService.playSong().subscribe(() => {
-      console.log('Now Playing');
-    });
   }
 }

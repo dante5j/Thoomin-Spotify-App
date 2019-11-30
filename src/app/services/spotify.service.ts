@@ -14,7 +14,12 @@ export class SpotifyService {
   $user: Subject<any> = new Subject<any>();
   $playlists: Subject<any[]> = new Subject<any[]>();
   playerConnected = false;
+  firstSongAdded = false;
   constructor(private http: HttpClient) {}
+
+  setFirstSongAdded(value: boolean) {
+    this.firstSongAdded = value;
+  }
 
   getTrack() {
     return this.http.post(`${this.url}/api/spotify/track`, {
@@ -107,12 +112,12 @@ export class SpotifyService {
     });
   }
 
-  playSong() {
+  playPlaylist(playlistId: string) {
     const accessToken = localStorage.getItem('accessToken');
     const deviceId = localStorage.getItem('_spharmony_device_id');
     return this.http.put(
       `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
-      { uris: ['spotify:track:1W24W6jQegnNh0x5DfBBPT'] },
+      { context_uri: `spotify:playlist:${playlistId}` },
       {
         headers: {
           'Content-Type': 'application/json',

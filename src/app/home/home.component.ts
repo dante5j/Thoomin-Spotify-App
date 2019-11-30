@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
     const thoominToken = this.cookieService.get('thoominToken');
     const customToken = thoominToken
       ? thoominToken
-      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NTAwODg1NCwiZXhwIjoxNTc1MDEyNDU0LCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.lcizPh_K7QgC6WbLq_KDRYdtbifzLgSrIpVtzFZanHNBbfT-UDmKrWNVDISjapC2XdXqW7IX1FhGGre0H8hM-8z1iT30GTse9dHFPWru6Uicw224K7lJlzu9d2r9wNUg80lPMsb7EColD-HWaX2Ji-5jfAIwCcJVxlR0GZvfyxIbdYRRXp42lvbUFSz03lqkpxKBpmMcW2fnHCf_IYTc0vgnHoTCqsTbeOqeNXHVlkB3T-NbiL4aBUgk2-WMogK7Ay2QNzBasnhVPnDnzmCXcsxec2Aq9grv9os3Nr-y4wuJ-QnVYyTFfKZCcMjkc1KcA85nxZ4lrWOTL2f5gViy8Q';
+      : 'yourthoomintoken';
     this.thoominToken = this.cookieService.get('thoominToken');
     firebase.initializeApp(this.firebaseConfig);
     firebase
@@ -74,7 +74,8 @@ export class HomeComponent implements OnInit {
   createParty() {
     this.loginService.createParty(localStorage.getItem('idToken'), 'test').subscribe((party: any) => {
       console.log('party code', party);
-      localStorage.setItem('partyCode', party.partyCode);
+      localStorage.setItem('partyCode', party.partyCode.partyCode);
+      localStorage.setItem('partyPlaylistId', party.playlistId);
     });
   }
 
