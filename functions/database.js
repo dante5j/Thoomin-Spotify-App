@@ -135,6 +135,7 @@ function getRefreshToken(idToken) {
 function createParty(idToken, partyName) {
 	return new Promise((resolve, reject) => {
 		let userRecord = null;
+		let playlistId = null;
 
 		admin.auth().verifyIdToken(idToken)
 		.then(decodedToken => {
@@ -154,10 +155,12 @@ function createParty(idToken, partyName) {
 			return spotify.createPlaylist(accessToken, partyName);
 		})
 		.then(playlist => {
+			playlistId = playlist.id;
+
 			return addPartyCodeToDatabase(userRecord.uid, playlist);
 		})
 		.then(party => {
-			resolve(party);
+			resolve({playlistId : playlistId, partyCode : party});
 			return party;
 		})
 		.catch(error => {
@@ -204,6 +207,94 @@ function getRandomPartyId(length) {
 	return partyCode;
 }
 
+function addTrackToParty(partyCode, name, trackId) {
+	let uid = null;
+	let playlistId = null;
+
+	return new Promise((resolve, reject) => {
+		db.ref('/party/' + partyCode).once('value')
+		.then(info => {
+			uid = info.toJSON().hostUID;
+			playlistId = info.toJSON().id;
+
+			console.log("PARTY: ", info.toJSON());
+			return db.ref('/users/' + uid + '/tokens').once('value');
+		})
+		.then(tokens => {
+			const refreshToken = tokens.toJSON().refreshToken;
+			console.log("Refresh Token: " + refreshToken);
+			return spotify.getAccessTokenFromRefreshToken(refreshToken);
+		})
+		.then(accessToken => {
+			console.log("accessToken: " + accessToken);
+			return spotify.addTrackToPlaylist(accessToken, trackId, playlistId);
+		})
+		.then(playlist => {
+			console.log("playlist: " + playlist);
+			resolve(playlist);
+			return playlist;
+		})
+		.catch(error => {
+			reject(error);
+		});
+	});
+}
+
+function getCurrentlyPlaying(partyCode, name) {
+	let uid = null;
+	let playlistId = null;
+
+	return new Promise((resolve, reject) => {
+		db.ref('/party/' + partyCode).once('value')
+		.then(info => {
+			if (!info.exists()) {
+				reject(new Error("Party does not exist"));
+			}
+
+			uid = info.toJSON().hostUID;
+			playlistId = info.toJSON().id;
+
+			console.log("PARTY: ", info.toJSON());
+			return db.ref('/users/' + uid + '/tokens').once('value');
+		})
+		.then(tokens => {
+			const refreshToken = tokens.toJSON().refreshToken;
+			console.log("Refresh Token: " + refreshToken);
+			return spotify.getAccessTokenFromRefreshToken(refreshToken);
+		})
+		.then(accessToken => {
+			console.log("accessToken: " + accessToken);
+			return spotify.getCurrentlyPlaying(accessToken);
+		})
+		.then(body => {
+			console.log(body);
+			resolve(body);
+			return body;
+		})
+		.catch(error => {
+			reject(error);
+		});
+	});
+}
+
+function joinParty(name, partyCode) {
+	return new Promise((resolve, reject) => {
+		db.ref('/party/' + partyCode).once('value')
+		.then(info => {
+			if (info.exists()) {
+				resolve("Joined party!");
+			} else {
+				reject(new Error("Party does not exist."));
+			}
+
+			return;
+		})
+		.catch(error => {
+			resolve(new Error("Party does not exist."));
+		})
+	});
+}
+
 module.exports = {
 	createFirebaseToken: function(spotifyURI) {
 		return createFirebaseToken(spotifyURI);
@@ -222,7 +313,14 @@ module.exports = {
 	},
 	createParty: function(idToken, partyName) {
 		return createParty(idToken, partyName);
+	},
+	addTrackToParty: function(partyCode, name, trackId) {
+		return addTrackToParty(partyCode, name, trackId);
+	},
+	joinParty: function(name, partyCode) {
+		return joinParty(name, partyCode);
+	},
+	getCurrentlyPlaying: function(partyCode, name) {
+		return getCurrentlyPlaying(partyCode, name);
 	}
 }
-
-// createParty(idToken, partyName)

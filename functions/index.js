@@ -47,6 +47,11 @@ app.get(basePath + '/version', (req, res) => {
 	res.status(200).json({version: VERSION});
 });
 
+app.get(basePath + '/swaggerhub', (req, res) => {
+	const url = 'https://app.swaggerhub.com/apis/ntorressm/Thoomin-Spotify/1.0.0';
+	res.redirect(url);
+});
+
 app.get(basePath + '/spotify/auth', (req, res) => {
   spotify.getAccessToken()
   .then(accessToken => {
@@ -101,7 +106,7 @@ app.get(basePath + '/user/login', (req, res) => {
 	console.log("REDIRECT URI " + redirectURI);
 	spotify.setRedirectURI(redirectURI);
 
-	const scope = 'user-read-private user-read-email streaming playlist-modify-public playlist-modify-private';
+	const scope = 'user-read-private user-read-email streaming playlist-modify-public playlist-modify-private user-read-currently-playing user-read-playback-state';
 	res.redirect('https://accounts.spotify.com/authorize?' +
 		querystring.stringify({
 		response_type: 'code',
@@ -156,6 +161,44 @@ app.get(basePath + '/user/callback', (req, res) => {
 	}
 });
 
+app.post(basePath + '/party/add', (req, res) => {
+	const name =  req.body.name || 'Guest';
+	const trackId = req.body.trackId;
+	const partyCode = req.body.partyCode;
+
+	if (!trackId) {
+		res.status(400).json({error: "trackId required to add track to party."});
+	} else if (!partyCode) {
+		res.status(400).json({error: "partyCode required to add track to party."});
+	} else {
+		database.addTrackToParty(partyCode, name, trackId).then(playlist => {
+			res.status(200).json({playlist: playlist});
+			return playlist;
+		})
+		.catch(error => {
+			res.status(400).json({error: error});
+		});
+	}
+});
+
+app.post(basePath + '/party/join', (req, res) => {
+	const name =  req.body.name || 'Guest';
+	const partyCode = req.body.partyCode;
+
+	if (!partyCode) {
+		res.status(400).json({error: "partyCode required."});
+	} else {
+		database.joinParty(name, partyCode)
+		.then(info => {
+			res.status(200).json(info);
+			return;
+		})
+		.catch(error => {
+			res.status(400).json({error : error.message});
+		})
+	}
+});
+
 app.post(basePath + '/user/party/create', (req, res) => {
 	const idToken = req.body.idToken;
 	const partyName = req.body.partyName || null;
@@ -172,6 +215,23 @@ app.post(basePath + '/user/party/create', (req, res) => {
 			console.log(error);
 			res.status(400).json({error: error.message});
 		})
+	}
+});
+
+app.post(basePath + '/party/playing', (req, res) => {
+	const name =  req.body.name || 'Guest';
+	const partyCode = req.body.partyCode;
+
+	if (!partyCode) {
+		res.status(400).json({error: "partyCode required to add track to party."});
+	} else {
+		database.getCurrentlyPlaying(partyCode, name).then(track => {
+			res.status(200).json(track);
+			return track;
+		})
+		.catch(error => {
+			res.status(400).json({error: error.message});
+		});
 	}
 });
 
