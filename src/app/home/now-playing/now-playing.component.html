@@ -63,16 +63,6 @@
         {{ artist.name }}&nbsp;
       </h5>
     </div>
-    <div class="mt-3 col-12 d-flex justify-content-center">
-      <input
-        type="range"
-        min="0"
-        [max]="playbackState?.duration"
-        [value]="playbackState?.position"
-        [ngModel]="playbackState?.position"
-        (ngModelChange)="seek($event)"
-      />
-    </div>
     <div class="mt-4 col-12 d-flex justify-content-center">
       <button (click)="prev()" class="mx-1 btn btn-outline-primary">
         <i class="fa fa-fast-backward"></i>
