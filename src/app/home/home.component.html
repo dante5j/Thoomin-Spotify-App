@@ -5,7 +5,7 @@
   <h2 *ngIf="user" class="text-thoomin m-0">
     &nbsp;|&nbsp;{{ user?.display_name }}'s Party
   </h2>
-  <button class="btn btn-primary ml-auto" [routerLink]="'/login'">
+  <button class="btn btn-primary" (click)="open(logoutModal)">
     Log out
   </button>
 </div>
@@ -39,3 +39,20 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<ng-template #logoutModal let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Log out</h4>
+      <button type="button" class="close" (click)="modal.dismiss('logout')">
+          <span>&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="alert alert-danger m-0" role="alert">
+          Are you sure you want to log out?
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close('logout')">Log out</button>
+  </div>
+</ng-template>
