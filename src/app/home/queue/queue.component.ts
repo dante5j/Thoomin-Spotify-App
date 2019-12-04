@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from 'src/app/services/spotify.service';
+import { Track } from 'src/app/models/spotify.model';
 
 @Component({
   selector: 'app-queue',
@@ -9,18 +10,31 @@ import { SpotifyService } from 'src/app/services/spotify.service';
 export class QueueComponent implements OnInit {
   queue: any[];
 
-  constructor(
-    private spotifyService: SpotifyService,
-  ) {}
+  constructor(private spotifyService: SpotifyService) {}
 
   ngOnInit() {
     this.getQueue();
   }
 
   getQueue() {
-    this.spotifyService.getQueue(localStorage.getItem('partyCode')).subscribe((queue: any) => {
-      console.log('Queue', queue);
-      this.queue = queue;
-    });
+    this.spotifyService
+      .getQueue(localStorage.getItem('partyCode'))
+      .subscribe((queue: any) => {
+        console.log('Queue', queue);
+        this.queue = queue;
+      });
+  }
+
+  removeSong(track: Track) {
+    this.queue = this.queue.filter(t => t.id !== track.id);
+    this.spotifyService
+      .removeTrack(
+        localStorage.getItem('partyCode'),
+        localStorage.getItem('idToken'),
+        track.id
+      )
+      .subscribe(res => {
+        console.log('track removed', res);
+      });
   }
 }

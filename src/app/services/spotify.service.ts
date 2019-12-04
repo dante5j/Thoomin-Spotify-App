@@ -34,6 +34,14 @@ export class SpotifyService {
     });
   }
 
+  removeTrack(partyCode: string, idToken: string, trackId: string) {
+    return this.http.post(`${this.url}/api/user/party/remove`, {
+      partyCode,
+      idToken,
+      trackId
+    });
+  }
+
   getQueue(partyCode: string) {
     return this.http.post(`${this.url}/api/party/queue`, {
       partyCode
