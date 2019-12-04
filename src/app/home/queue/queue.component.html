@@ -1,11 +1,12 @@
+<h1 class="text-thoomin">Queue
+    <button (click)="getQueue()" class="btn btn-thoomin my-auto">
+        <h3 class="m-0"><i class="fa fa-refresh"></i></h3>
+      </button>
+</h1>
 <div class="row">
   <div class="col-auto">
-    <h1 class="text-thoomin">Queue</h1>
   </div>
   <div class="col-auto d-flex p-0">
-    <button (click)="getQueue()" class="btn btn-thoomin my-auto">
-      <h3 class="m-0"><i class="fa fa-refresh"></i></h3>
-    </button>
   </div>
 </div>
 <div *ngFor="let track of queue" class="row mb-2">
