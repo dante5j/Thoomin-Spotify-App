@@ -1,9 +1,11 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import {
-  Track,
+  PlaybackState,
   SpotifyPlayer,
-  PlaybackState
+  Track
 } from 'src/app/models/spotify.model';
+
+import { HomeComponent } from '../home.component';
 import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
@@ -18,6 +20,7 @@ export class NowPlayingComponent implements OnInit {
   nextTracks: Track[];
   tracksLength: number;
   player: SpotifyPlayer;
+  partyCode: string;
 
   constructor(private zone: NgZone, private spotifyService: SpotifyService) {}
 
@@ -28,6 +31,7 @@ export class NowPlayingComponent implements OnInit {
       this.playbackState = state;
       this.setNowPlaying();
     });
+    this.partyCode = localStorage.getItem('partyCode');
   }
 
   setNowPlaying() {

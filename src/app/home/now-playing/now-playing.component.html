@@ -1,6 +1,7 @@
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
 <h1 class="text-thoomin">Now Playing</h1>
+<h3 class="text-thoomin">Party Code: {{ partyCode }}</h3>
 
 <ng-container *ngIf="currTrack">
   <div
@@ -58,21 +59,22 @@
       </h5>
       <h5
         *ngFor="let artist of currTrack.artists"
-        class="d-inline text-thoomin text-muted text-center"
+        class="d-inline text-thoomin text-center"
       >
         {{ artist.name }}&nbsp;
       </h5>
     </div>
     <div class="mt-4 col-12 d-flex justify-content-center">
-      <button (click)="prev()" class="mx-1 btn btn-outline-primary">
+      <button (click)="prev()" class="mx-1 btn btn-primary">
         <i class="fa fa-fast-backward"></i>
       </button>
-      <button (click)="playpause()" class="mx-1 btn btn-outline-primary">
+      <button (click)="playpause()" class="mx-1 btn btn-primary">
         <i class="fa fa-play"></i> / <i class="fa fa-pause"></i>
       </button>
-      <button (click)="next()" class="mx-1 btn btn-outline-primary">
+      <button (click)="next()" class="mx-1 btn btn-primary">
         <i class="fa fa-fast-forward"></i>
       </button>
     </div>
   </div>
 </ng-container>
+
