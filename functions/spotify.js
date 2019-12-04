@@ -17,6 +17,41 @@ function setRedirectURI(redirectURI) {
 	REDIRECT_URI = redirectURI;
 }
 
+function addTrackToPlaylist(accessToken, trackId, playlistId) {
+	let tracks = [];
+	tracks.push('spotify:track:' + trackId);
+
+	return new Promise((resolve, reject) => {
+		getSpotifyUser(accessToken).then(spotifyUser => {
+			const userId = spotifyUser.id;
+
+			const options = {
+				url: 'https://api.spotify.com/v1/users/' + userId + '/playlists/' + playlistId + '/tracks',
+				headers: {'Authorization' : 'Bearer ' + accessToken},
+				json: {
+					uris: tracks
+				}
+			}
+
+			request.post(options, (error, response, body) => {
+				if (error || (response.statusCode !== 201 && response.statusCode !== 200)) {
+					console.log("ERROR: " + JSON.stringify(body));
+					console.log("STATUS CODE: " + response.statusCode);
+					reject(new Error("Can't add song to playlist."));
+				} else {
+					resolve(body);
+				}
+			});
+
+			return;
+		})
+		.catch(error => {
+			console.log(error);
+			resolve(error);
+		})
+	});
+}
+
 function createPlaylist(accessToken, playlistName) {
 	return new Promise((resolve, reject) => {
 		getSpotifyUser(accessToken).then(spotifyUser => {
@@ -213,6 +248,38 @@ function getAccessToken() {
 	});
 }
 
+function getCurrentlyPlaying(accessToken) {
+	return new Promise((resolve, reject) => {
+		const options = {
+			url: 'https://api.spotify.com/v1/me/player/currently-playing',
+			headers: {'Authorization' : 'Bearer ' + accessToken},
+		}
+
+		request.get(options, (error, response, body) => {
+			if (error || (response.statusCode !== 201 && response.statusCode !== 200)) {
+				console.log("ERROR: " + JSON.stringify(body));
+				console.log("STATUS CODE: " + response.statusCode);
+				reject(new Error("Can't get currently playing song."));
+			} else {
+				body = JSON.parse(body);
+				console.log(body);
+
+				let artists = [];
+				body.item.artists.forEach(artist => artists.push(artist.name));
+
+				const track = {
+					id: body.item.id,
+					name: body.item.name,
+					artists: artists,
+					image: body.item.album.images[0].url
+				};
+
+				resolve(track);
+			}
+		});
+	});
+}
+
 
 /*
 	TODO: Remove OLD functions
@@ -316,5 +383,13 @@ module.exports = {
 	},
 	createPlaylist: function(accessToken, playlistName) {
 		return createPlaylist(accessToken, playlistName);
+	},
+	addTrackToPlaylist: function(accessToken, trackId, playlistId) {
+		return addTrackToPlaylist(accessToken, trackId, playlistId);
+	},
+	getCurrentlyPlaying: function(accessToken) {
+		return getCurrentlyPlaying(accessToken);
 	}
 }
+
+// function getCurrentlyPlaying(accessToken)
