@@ -8,6 +8,10 @@ body {
   font-family: "Helvetica";
 }
 
+.list-comma::before {
+  content: ",";
+}
+
 .bg-concert {
   /* The image used */
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),

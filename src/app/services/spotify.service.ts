@@ -34,6 +34,12 @@ export class SpotifyService {
     });
   }
 
+  getQueue(partyCode: string) {
+    return this.http.post(`${this.url}/api/party/queue`, {
+      partyCode
+    });
+  }
+
   connectPlayer() {
     if ((window as any).Spotify) {
       this.playerConnected = true;

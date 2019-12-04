@@ -19,10 +19,10 @@
     <button (click)="toggleSidenav()" class="btn btn-thoomin px-0">
       <i class="fa fa-arrow-left"></i>
     </button><br>
-    <button *ngIf="enableCreateParty" (click)="createParty()" class="btn btn-primary px-0">
+    <button *ngIf="enableCreateParty && !loginService.partyCreated" (click)="open(createPartyModal)" class="btn btn-primary px-0">
       Create Party
     </button>
-    <app-sidenav></app-sidenav>
+    <app-sidenav [hidden]="!loginService.partyCreated"></app-sidenav>
   </div>
 
   <div
@@ -54,5 +54,25 @@
   </div>
   <div class="modal-footer">
       <button type="button" class="btn btn-outline-danger" (click)="modal.close('logout')">Log out</button>
+  </div>
+</ng-template>
+
+<ng-template #createPartyModal let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Party</h4>
+      <button type="button" class="close" (click)="modal.dismiss('logout')">
+          <span>&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+        <input
+          [(ngModel)]="partyName"
+          type="text"
+          class="form-control"
+          placeholder="Party Name"
+        />
+      </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close('logout'); createParty()">Create</button>
   </div>
 </ng-template>

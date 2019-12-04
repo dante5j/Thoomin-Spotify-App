@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginService {
   url = 'https://thoomin-spotify-app.firebaseapp.com';
+  partyCreated = false;
   constructor(private http: HttpClient) {}
 
   login() {
@@ -19,6 +20,7 @@ export class LoginService {
   }
 
   createParty(idToken: string, partyName: string) {
+    this.partyCreated = true;
     return this.http.post(`${this.url}/api/user/party/create`, {
       idToken,
       partyName

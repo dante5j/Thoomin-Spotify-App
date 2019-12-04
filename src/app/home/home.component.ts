@@ -25,15 +25,14 @@ export class HomeComponent implements OnInit {
   user: any;
   enableCreateParty = false;
   partyCode: string;
-
-
+  partyName = '';
   modalTitle = {
     logout: 'Log out'
   };
 
   constructor(
     private cookieService: CookieService,
-    private loginService: LoginService,
+    public loginService: LoginService,
     private spotifyService: SpotifyService,
     private modalService: NgbModal,
     private router: Router
@@ -43,7 +42,7 @@ export class HomeComponent implements OnInit {
     const thoominToken = this.cookieService.get('thoominToken');
     const customToken = thoominToken
       ? thoominToken
-      : 'yourthoomintoken';
+      : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTU3NTQzMzUzMSwiZXhwIjoxNTc1NDM3MTMxLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1ma2ltaEB0aG9vbWluLXNwb3RpZnktYXBwLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstZmtpbWhAdGhvb21pbi1zcG90aWZ5LWFwcC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6InNwb3RpZnk6dXNlcjpjaGFybGllY2hhbXA2MTYifQ.gpiNovXrZlzLxuccq3sgi794RvIwY6ja1jis1K19zfQNG-pUgWBsis66dgiK7DC1Yqxqjw3ThTRwpdACKHTOXlVvM2_4n2FI-vvx_lh188OdhTu4ZjAgTqcGfQsqH-luQ_PNrMrl766gLWDozT8kwTZ0Y5-wDJAk7kA9-2q8n0l7hNbfMmVjUHzF1IXuYDjVMWhNQ4LmTfI1lDPOnkAUCDw9hynaR9R6IA6LLpY4Z4HKrpypqLEj4H7gHCQuDgWqFdmGpQQWpv9PYEu3b1N4lZEId1ExX_6X3Mcj7CBYdZKuIPelQCXwi8qiIzH54QVM2MI3oTH4gTpueHYUxjJu_g';
     this.thoominToken = this.cookieService.get('thoominToken');
     firebase.initializeApp(this.firebaseConfig);
     firebase
@@ -85,7 +84,7 @@ export class HomeComponent implements OnInit {
   }
 
   createParty() {
-    this.loginService.createParty(localStorage.getItem('idToken'), 'test').subscribe((party: any) => {
+    this.loginService.createParty(localStorage.getItem('idToken'), this.partyName).subscribe((party: any) => {
       console.log('party code', party);
       localStorage.setItem('partyCode', party.partyCode.partyCode);
       localStorage.setItem('partyPlaylistId', party.playlistId);

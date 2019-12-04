@@ -58,10 +58,11 @@
         {{ currTrack.name }}&nbsp;-&nbsp;
       </h5>
       <h5
-        *ngFor="let artist of currTrack.artists"
+        *ngFor="let artist of currTrack.artists; let i = index"
         class="d-inline text-thoomin text-center"
+        [ngClass]="{'list-comma': i}"
       >
-        {{ artist.name }}&nbsp;
+        {{ artist.name }}
       </h5>
     </div>
     <div class="mt-4 col-12 d-flex justify-content-center">
