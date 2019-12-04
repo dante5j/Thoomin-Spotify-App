@@ -277,6 +277,83 @@ function getCurrentlyPlaying(partyCode, name) {
 	});
 }
 
+function getQueue(partyCode, name) {
+	let uid = null;
+	let playlistId = null;
+	let tracks = null;
+
+	return new Promise((resolve, reject) => {
+		db.ref('/party/' + partyCode).once('value')
+		.then(info => {
+			if (!info.exists()) {
+				reject(new Error("Party does not exist"));
+			}
+
+			uid = info.toJSON().hostUID;
+			playlistId = info.toJSON().id;
+
+			console.log("PARTY: ", info.toJSON());
+			return db.ref('/users/' + uid + '/tokens').once('value');
+		})
+		.then(tokens => {
+			const refreshToken = tokens.toJSON().refreshToken;
+			console.log("Refresh Token: " + refreshToken);
+			return spotify.getAccessTokenFromRefreshToken(refreshToken);
+		})
+		.then(accessToken => {
+			console.log("accessToken: " + accessToken);
+			return spotify.getPlaylistSongs(accessToken, playlistId);
+		})
+		.then(trackss => {
+			tracks = trackss;
+			return getCurrentlyPlaying(partyCode, name);
+		})
+		.then((currentlyPlaying) => {
+			for (let i = 0; i < tracks.length; i++) {
+				if (tracks[i].id === currentlyPlaying.id) {
+					tracks = tracks.slice(i, tracks.length);
+				}
+			}
+
+			resolve(tracks);
+
+			return tracks;
+		})
+		.catch(error => {
+			reject(error);
+		});
+	});
+}
+
+function removeTrack(idToken, partyCode, trackId) {
+	let accessToken = null;
+
+	return new Promise((resolve, reject) => {
+		getRefreshToken(idToken).then(refreshToken => {
+			return spotify.getAccessTokenFromRefreshToken(refreshToken);
+		})
+		.then(accesssToken => {
+			accessToken = accesssToken;
+			
+			return db.ref('/party/' + partyCode).once('value');
+		})
+		.then(info => {
+			console.log("PARTY: ", info.toJSON());
+			playlistId = info.toJSON().id;
+
+			return spotify.deleteSongFromPlaylist(accessToken, playlistId, trackId);
+		})
+		.then(thing => {
+			resolve(thing);
+			return thing;
+		})
+		.catch(error => {
+			console.log(error);
+			reject(error);
+		});
+	});
+}
+
 function joinParty(name, partyCode) {
 	return new Promise((resolve, reject) => {
 		db.ref('/party/' + partyCode).once('value')
@@ -322,5 +399,13 @@ module.exports = {
 	},
 	getCurrentlyPlaying: function(partyCode, name) {
 		return getCurrentlyPlaying(partyCode, name);
+	},
+	getQueue: function(partyCode, name) {
+		return getQueue(partyCode, name);
+	},
+	removeTrack: function(idToken, partyCode, trackId) {
+		return removeTrack(idToken, partyCode, trackId);
 	}
 }
+
+// removeTrack(idToken, partyCode, trackId)

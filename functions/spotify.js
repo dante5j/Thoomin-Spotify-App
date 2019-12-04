@@ -280,6 +280,71 @@ function getCurrentlyPlaying(accessToken) {
 	});
 }
 
+function deleteSongFromPlaylist(accessToken, playlistId, trackId) {
+	return new Promise((resolve, reject) => {
+		const tracks = [];
+		tracks.push({
+			uri: "spotify:track:" + trackId
+		});
+		
+		const options = {
+			url: 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks',
+			headers: {'Authorization' : 'Bearer ' + accessToken},
+			json: {
+				tracks : tracks
+			}
+		}
+
+		request.delete(options, (error, response, body) => {
+			if (error || (response.statusCode !== 201 && response.statusCode !== 200)) {
+				console.log("ERROR: " + JSON.stringify(body));
+				console.log("STATUS CODE: " + response.statusCode);
+				reject(new Error("Can't delete track."));
+			} else {
+				console.log(body);
+				resolve("Deleted track with id: " + trackId);
+			}
+		});
+	});
+}
+
+function getPlaylistSongs(accessToken, playlistId) {
+	return new Promise((resolve, reject) => {
+		const options = {
+			url: 'https://api.spotify.com/v1/playlists/' + playlistId,
+			headers: {'Authorization' : 'Bearer ' + accessToken},
+		}
+	
+		request.get(options, (error, response, body) => {
+			if (error || (response.statusCode !== 201 && response.statusCode !== 200)) {
+				console.log("ERROR: " + JSON.stringify(body));
+				console.log("STATUS CODE: " + response.statusCode);
+				reject(new Error("Can't get playlist songs."));
+			} else {
+				body = JSON.parse(body);
+				// console.log(body);
+				const trackList = body.tracks.items;
+				console.log("TRACK LIST ", trackList);
+				let tracks = [];
+				
+				for (let i = 0; i < trackList.length; i++) {
+					let artists = [];
+					trackList[i].track.artists.forEach(artist => artists.push(artist.name));
+
+					tracks.push({
+						id: trackList[i].track.id,
+						name: trackList[i].track.name,
+						artists: artists,
+						image: trackList[i].track.album.images[0].url
+					})
+				}
+
+				resolve(tracks);
+			}
+		});
+	});
+}
+
 
 /*
 	TODO: Remove OLD functions
@@ -389,7 +454,13 @@ module.exports = {
 	},
 	getCurrentlyPlaying: function(accessToken) {
 		return getCurrentlyPlaying(accessToken);
+	},
+	getPlaylistSongs: function(accessToken, playlistId) {
+		return getPlaylistSongs(accessToken, playlistId);
+	},
+	deleteSongFromPlaylist: function(accessToken, playlistId, trackId) {
+		return deleteSongFromPlaylist(accessToken, playlistId, trackId);
 	}
 }
 
-// function getCurrentlyPlaying(accessToken)
+// deleteSongFromPlaylist(accessToken, playlistId, trackId)

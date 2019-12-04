@@ -181,6 +181,46 @@ app.post(basePath + '/party/add', (req, res) => {
 	}
 });
 
+app.post(basePath + '/user/party/remove', (req, res) => {
+	const idToken = req.body.idToken;
+	const partyCode = req.body.partyCode;
+	const trackId = req.body.trackId;
+	
+	if (!idToken) {
+		res.status(400).json({error: "idToken required to delete track."});
+	} else if (!partyCode) {
+		res.status(400).json({error: "partyCode required to delete track."});
+	} else if (!trackId) {
+		res.status(400).json({error: "trackId required to delete track."});
+	} else {
+		database.removeTrack(idToken, partyCode, trackId)
+		.then(thing => {
+			res.status(200).json(thing);
+			return thing;
+		})
+		.catch(error => {
+			res.status(400).json({error: error.message});
+		})
+	}
+});
+
+app.post(basePath + '/party/queue', (req, res) => {
+	const name =  req.body.name || 'Guest';
+	const partyCode = req.body.partyCode;
+
+	if (!partyCode) {
+		res.status(400).json({error: "partyCode required to get queue."});
+	} else {
+		database.getQueue(partyCode, name).then(tracks => {
+			res.status(200).json(tracks);
+			return track;
+		})
+		.catch(error => {
+			res.status(400).json({error: error.message});
+		});
+	}
+});
+
 app.post(basePath + '/party/join', (req, res) => {
 	const name =  req.body.name || 'Guest';
 	const partyCode = req.body.partyCode;
