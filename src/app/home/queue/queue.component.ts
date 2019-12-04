@@ -17,11 +17,13 @@ export class QueueComponent implements OnInit {
   }
 
   getQueue() {
+    this.queue = this.spotifyService.queue;
     this.spotifyService
       .getQueue(localStorage.getItem('partyCode'))
       .subscribe((queue: any) => {
         console.log('Queue', queue);
         this.queue = queue;
+        this.spotifyService.setQueue(queue);
       });
   }
 

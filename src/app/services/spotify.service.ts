@@ -15,10 +15,15 @@ export class SpotifyService {
   $playlists: Subject<any[]> = new Subject<any[]>();
   playerConnected = false;
   firstSongAdded = false;
+  queue: any[];
   constructor(private http: HttpClient) {}
 
   setFirstSongAdded(value: boolean) {
     this.firstSongAdded = value;
+  }
+
+  setQueue(value: any[]) {
+    this.queue = value;
   }
 
   getTrack() {
