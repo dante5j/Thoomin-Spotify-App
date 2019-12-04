@@ -34,6 +34,7 @@ export class SpotifyService {
 
   addTrack(trackId: string, partyCode: string) {
     return this.http.post(`${this.url}/api/party/add`, {
+      name: 'host',
       trackId,
       partyCode
     });
