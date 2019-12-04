@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from 'src/app/services/spotify.service';
 import { Track } from 'src/app/models/spotify.model';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-queue',
@@ -10,10 +11,13 @@ import { Track } from 'src/app/models/spotify.model';
 export class QueueComponent implements OnInit {
   queue: any[];
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(private spotifyService: SpotifyService,
+              private loginService: LoginService) {}
 
   ngOnInit() {
-    this.getQueue();
+    if (this.loginService.partyCreated) {
+      this.getQueue();
+    }
   }
 
   getQueue() {
