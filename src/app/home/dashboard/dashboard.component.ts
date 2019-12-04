@@ -24,12 +24,12 @@ export class DashboardComponent implements OnInit {
   addSong(track: Track) {
     this.spotifyService.addTrack(track.id, localStorage.getItem('partyCode')).subscribe((res) => {
       console.log('track added', res);
-      if (!this.spotifyService.firstSongAdded) {
-        this.spotifyService.setFirstSongAdded(true);
-        this.spotifyService.playPlaylist(localStorage.getItem('partyPlaylistId')).subscribe(playlist => {
-          console.log('playing playlist', playlist);
-        });
-      }
+      // if (!this.spotifyService.firstSongAdded) {
+      //   this.spotifyService.setFirstSongAdded(true);
+      //   this.spotifyService.playPlaylist(localStorage.getItem('partyPlaylistId')).subscribe(playlist => {
+      //     console.log('playing playlist', playlist);
+      //   });
+      // }
     });
   }
 }
