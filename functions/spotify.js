@@ -335,7 +335,7 @@ function getPlaylistSongs(accessToken, playlistId) {
 						id: trackList[i].track.id,
 						name: trackList[i].track.name,
 						artists: artists,
-						image: trackList[i].track.album.images[0].url
+						image: trackList[i].track.album.images[2].url
 					})
 				}
 
