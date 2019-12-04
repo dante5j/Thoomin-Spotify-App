@@ -39,6 +39,9 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (!this.loginService.partyCreated) {
+      this.router.navigate(['home/dashboard']);
+    }
     const thoominToken = this.cookieService.get('thoominToken');
     const customToken = thoominToken
       ? thoominToken
